@@ -29,7 +29,17 @@
         .menu-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin: 10px 0;
+        }
+
+        .menu-item span {
+            flex: 2;
+        }
+
+        .menu-item input[type="number"] {
+            width: 60px;
+            margin-left: 10px;
         }
 
         .btn {
@@ -77,28 +87,23 @@
         <h3>Menu</h3>
         <div class="menu-item">
             <span>Malai Boti Biryani</span>
-            
-            <input type="checkbox" class="menu-option" data-name="Malai Boti Biryani" data-price="681">
+            <input type="number" class="menu-quantity" data-name="Malai Boti Biryani" data-price="681" min="0" value="0">
         </div>
         <div class="menu-item">
             <span>Malai Boti Pulao</span>
-            
-            <input type="checkbox" class="menu-option" data-name="Malai Boti Pulao" data-price="681">
+            <input type="number" class="menu-quantity" data-name="Malai Boti Pulao" data-price="681" min="0" value="0">
         </div>
         <div class="menu-item">
             <span>Tikka Biryani</span>
-            
-            <input type="checkbox" class="menu-option" data-name="Tikka Biryani" data-price="711">
+            <input type="number" class="menu-quantity" data-name="Tikka Biryani" data-price="711" min="0" value="0">
         </div>
         <div class="menu-item">
             <span>Kabab Biryani</span>
-            
-            <input type="checkbox" class="menu-option" data-name="Kabab Biryani" data-price="591">
+            <input type="number" class="menu-quantity" data-name="Kabab Biryani" data-price="591" min="0" value="0">
         </div>
         <div class="menu-item">
             <span>Shami Pulao Double</span>
-            
-            <input type="checkbox" class="menu-option" data-name="Shami Pulao Double" data-price="451">
+            <input type="number" class="menu-quantity" data-name="Shami Pulao Double" data-price="451" min="0" value="0">
         </div>
 
         <button class="btn" onclick="calculateBill()">Calculate Bill</button>
@@ -108,22 +113,23 @@
             <h4>Send Payment To:</h4>
             <p>Hamza Saeed</p>
             <p><strong>03460978366</strong></p>
-            <p><strong>Sadapay</strong></p>
+            <p><strong>SadaPay</strong></p>
         </div>
     </div>
 
     <script>
         function calculateBill() {
-            const options = document.querySelectorAll('.menu-option');
+            const options = document.querySelectorAll('.menu-quantity');
             let selectedItems = [];
             let total = 0;
 
             options.forEach(option => {
-                if (option.checked) {
+                const quantity = parseInt(option.value);
+                if (quantity > 0) {
                     const name = option.getAttribute('data-name');
                     const price = parseInt(option.getAttribute('data-price'));
-                    selectedItems.push(`${name} - Rs ${price}`);
-                    total += price;
+                    selectedItems.push(`${name} x${quantity} - Rs ${price * quantity}`);
+                    total += price * quantity;
                 }
             });
 
@@ -132,7 +138,7 @@
 
             if (selectedItems.length > 0) {
                 billDetails.innerHTML = `
-                    <h4>Achaaaa!!! tu aap ny ye khaya:</h4>
+                    <h4>Here’s your selection:</h4>
                     <ul>${selectedItems.map(item => `<li>${item}</li>`).join('')}</ul>
                     <p><strong>Total: Rs ${total}</strong></p>
                 `;
