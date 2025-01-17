@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunch Contribution</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            color: #155724;
+        }
+
+        .payment-details {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lunch Contribution</h1>
+    <div class="container">
+        <h3>Menu</h3>
+        <div class="menu-item">
+            <span>Malai Boti Biryani</span>
+            
+            <input type="checkbox" class="menu-option" data-name="Malai Boti Biryani" data-price="681">
+        </div>
+        <div class="menu-item">
+            <span>Malai Boti Pulao</span>
+            
+            <input type="checkbox" class="menu-option" data-name="Malai Boti Pulao" data-price="681">
+        </div>
+        <div class="menu-item">
+            <span>Tikka Biryani</span>
+            
+            <input type="checkbox" class="menu-option" data-name="Tikka Biryani" data-price="711">
+        </div>
+        <div class="menu-item">
+            <span>Kabab Biryani</span>
+            
+            <input type="checkbox" class="menu-option" data-name="Kabab Biryani" data-price="591">
+        </div>
+        <div class="menu-item">
+            <span>Shami Pulao Double</span>
+            
+            <input type="checkbox" class="menu-option" data-name="Shami Pulao Double" data-price="451">
+        </div>
+
+        <button class="btn" onclick="calculateBill()">Calculate Bill</button>
+
+        <div class="result hidden" id="billDetails"></div>
+        <div class="payment-details hidden" id="paymentDetails">
+            <h4>Send Payment To:</h4>
+            <p>Hamza Saeed</p>
+            <p><strong>03460918366</strong></p>
+            <p><strong>Sadapay</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function calculateBill() {
+            const options = document.querySelectorAll('.menu-option');
+            let selectedItems = [];
+            let total = 0;
+
+            options.forEach(option => {
+                if (option.checked) {
+                    const name = option.getAttribute('data-name');
+                    const price = parseInt(option.getAttribute('data-price'));
+                    selectedItems.push(`${name} - Rs ${price}`);
+                    total += price;
+                }
+            });
+
+            const billDetails = document.getElementById('billDetails');
+            const paymentDetails = document.getElementById('paymentDetails');
+
+            if (selectedItems.length > 0) {
+                billDetails.innerHTML = `
+                    <h4>Achaaaa!!! tu aap ny ye khaya:</h4>
+                    <ul>${selectedItems.map(item => `<li>${item}</li>`).join('')}</ul>
+                    <p><strong>Total: Rs ${total}</strong></p>
+                `;
+                billDetails.classList.remove('hidden');
+                paymentDetails.classList.remove('hidden');
+            } else {
+                billDetails.innerHTML = '<p>Please select at least one item!</p>';
+                billDetails.classList.remove('hidden');
+                paymentDetails.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
