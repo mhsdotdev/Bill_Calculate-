@@ -1,155 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lunch Contribution</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DD Dinner Bill</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(180deg, #eef2f5, #d9e2ec);
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 650px;
+    background: #fff;
+    margin: 50px auto;
+    padding: 25px 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  h1 {
+    text-align: center;
+    color: #234b72;
+    margin-bottom: 5px;
+  }
+  p.subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 25px;
+  }
+  .section {
+    margin-bottom: 25px;
+  }
+  .section h2 {
+    border-left: 4px solid #007bff;
+    padding-left: 10px;
+    color: #004080;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+  }
+  label:hover {
+    background: #f3f6fa;
+  }
+  label span {
+    color: #007bff;
+    font-weight: 500;
+  }
+  input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+  }
+  .btn {
+    width: 100%;
+    background: #00509d;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+  }
+  .btn:hover {
+    background: #003d7a;
+  }
+  .refresh {
+    background: #f3f4f6;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  .refresh:hover {
+    background: #e1e4e8;
+  }
 
-        h1 {
-            text-align: center;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .menu-item span {
-            flex: 2;
-        }
-
-        .menu-item input[type="number"] {
-            width: 60px;
-            margin-left: 10px;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #28a745;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #218838;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            color: #155724;
-        }
-
-        .payment-details {
-            margin-top: 20px;
-            padding: 10px;
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
-            border-radius: 5px;
-            color: #856404;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+  /* Popup Styles */
+  .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .popup-content {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    color: #2b2b2b;
+  }
+  .popup-content h2 {
+    text-align: center;
+    color: #234b72;
+  }
+  #selectedItems {
+    margin-bottom: 10px;
+    line-height: 1.4;
+    color: #333;
+  }
+  .totals {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+  .totals p {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+  }
+  .total {
+    color: #007a3d;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .account {
+    background: #f5faf7;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  .account h3 {
+    margin-top: 0;
+    color: #004a28;
+  }
+  .close-btn {
+    margin-top: 20px;
+    background: #b3261e;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .close-btn:hover {
+    background: #8c1a15;
+  }
+</style>
 </head>
 <body>
-    <h1>Lunch Contribution</h1>
-    <div class="container">
-        <h3 style="text-align: center;">Menu</h3>
-        <div class="menu-item">
-            <span>Malai Boti Biryani</span>
-            <input type="number" class="menu-quantity" data-name="Malai Boti Biryani" data-price="681" min="0" value="0">
-        </div>
-        <div class="menu-item">
-            <span>Malai Boti Pulao</span>
-            <input type="number" class="menu-quantity" data-name="Malai Boti Pulao" data-price="681" min="0" value="0">
-        </div>
-        <div class="menu-item">
-            <span>Tikka Biryani</span>
-            <input type="number" class="menu-quantity" data-name="Tikka Biryani" data-price="711" min="0" value="0">
-        </div>
-        <div class="menu-item">
-            <span>Kabab Biryani</span>
-            <input type="number" class="menu-quantity" data-name="Kabab Biryani" data-price="591" min="0" value="0">
-        </div>
-        <div class="menu-item">
-            <span>Shami Pulao Double</span>
-            <input type="number" class="menu-quantity" data-name="Shami Pulao Double" data-price="451" min="0" value="0">
-        </div>
+<div class="container">
+  <h1>DD Dinner Menu</h1>
+  <p class="subtitle">Select what you had for dinner below</p>
 
-        <button class="btn" onclick="calculateBill()">Calculate Bill</button>
-
-        <div class="result hidden" id="billDetails"></div>
-        <div class="payment-details hidden" id="paymentDetails">
-            <h4>Send Payment To:</h4>
-            <p>Hamza Saeed</p>
-            <p><strong>03460978366</strong></p>
-            <p><strong>SadaPay</strong></p>
-        </div>
+  <div id="menu">
+    <div class="section">
+      <h2>Burgers</h2>
+      <label><input type="checkbox" value="360"> Extra Beef Patty 100g <span>Rs. 360</span></label>
+      <label><input type="checkbox" value="770"> Swiss Mushroom (Beef) <span>Rs. 770</span></label>
+      <label><input type="checkbox" value="890"> DD Smokey House (Chicken) 150g <span>Rs. 890</span></label>
+      <label><input type="checkbox" value="1060"> The Messi (Beef) <span>Rs. 1060</span></label>
+      <label><input type="checkbox" value="1060"> The Messi (Chicken) <span>Rs. 1060</span></label>
+      <label><input type="checkbox" value="1090"> Molten Lava (Beef) 150g <span>Rs. 1090</span></label>
     </div>
 
-    <script>
-        function calculateBill() {
-            const options = document.querySelectorAll('.menu-quantity');
-            let selectedItems = [];
-            let total = 0;
+    <div class="section">
+      <h2>Fries</h2>
+      <label><input type="checkbox" value="220"> Curly Meal Fries <span>Rs. 220</span></label>
+    </div>
 
-            options.forEach(option => {
-                const quantity = parseInt(option.value);
-                if (quantity > 0) {
-                    const name = option.getAttribute('data-name');
-                    const price = parseInt(option.getAttribute('data-price'));
-                    selectedItems.push(`${name} x${quantity} - Rs ${price * quantity}`);
-                    total += price * quantity;
-                }
-            });
+    <div class="section">
+      <h2>Drinks</h2>
+      <label><input type="checkbox" value="105"> Pepsi <span>Rs. 105</span></label>
+      <label><input type="checkbox" value="240"> Peach Iced Tea <span>Rs. 240</span></label>
+      <label><input type="checkbox" value="80"> Mineral Water <span>Rs. 80</span></label>
+      <label><input type="checkbox" value="105"> 7up Zero (Diet) <span>Rs. 105</span></label>
+      <label><input type="checkbox" value="390"> Chocolate Overdoze (Meal) <span>Rs. 390</span></label>
+      <label><input type="checkbox" value="390"> Oreo Shake (Meal) <span>Rs. 390</span></label>
+    </div>
+  </div>
 
-            const billDetails = document.getElementById('billDetails');
-            const paymentDetails = document.getElementById('paymentDetails');
+  <button class="btn" onclick="calculateBill()">Show My Bill</button>
+  <button class="btn refresh" onclick="refreshMenu()">Refresh Menu</button>
+</div>
 
-            if (selectedItems.length > 0) {
-                billDetails.innerHTML = `
-                    <h4>Here’s your selection:</h4>
-                    <ul>${selectedItems.map(item => `<li>${item}</li>`).join('')}</ul>
-                    <p><strong>Total: Rs ${total}</strong></p>
-                `;
-                billDetails.classList.remove('hidden');
-                paymentDetails.classList.remove('hidden');
-            } else {
-                billDetails.innerHTML = '<p>Please select at least one item!</p>';
-                billDetails.classList.remove('hidden');
-                paymentDetails.classList.add('hidden');
-            }
-        }
-    </script>
+<!-- Popup -->
+<div class="popup" id="billPopup">
+  <div class="popup-content">
+    <h2>Your Bill</h2>
+    <p id="selectedItems"></p>
+    <div class="totals">
+      <p><span>Subtotal</span> <strong>Rs. <span id="subtotal">0</span></strong></p>
+      <p><span>GST (5%)</span> <strong>Rs. <span id="gst">0</span></strong></p>
+      <hr />
+      <p class="total"><span>Total Payable</span> <strong>Rs. <span id="total">0</span></strong></p>
+    </div>
+
+    <div class="account">
+      <h3>Transfer Amount To</h3>
+      <p><strong>Account Title:</strong> Abdullah Ashfaq</p>
+      <p><strong>Bank:</strong> Nayapay </p>
+      <p><strong>Account No:</strong> 03341806608 </p>
+    </div>
+
+    <button class="close-btn" onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<script>
+function calculateBill() {
+  const checkboxes = document.querySelectorAll('#menu input[type="checkbox"]:checked');
+  let subtotal = 0;
+  let itemList = [];
+
+  checkboxes.forEach(item => {
+    subtotal += parseFloat(item.value);
+    itemList.push(item.parentElement.innerText);
+  });
+
+  if (subtotal === 0) {
+    alert('Please select at least one item.');
+    return;
+  }
+
+  const gst = subtotal * 0.05;
+  const total = subtotal + gst;
+
+  document.getElementById('selectedItems').innerHTML =
+    '<strong>Items:</strong><br>' + itemList.join('<br>');
+  document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('gst').textContent = gst.toFixed(2);
+  document.getElementById('total').textContent = total.toFixed(2);
+
+  document.getElementById('billPopup').style.display = 'flex';
+}
+
+function closePopup() {
+  document.getElementById('billPopup').style.display = 'none';
+}
+
+function refreshMenu() {
+  const checkboxes = document.querySelectorAll('#menu input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = false);
+}
+</script>
 </body>
 </html>
